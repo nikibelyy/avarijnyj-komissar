@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Виртуальное Казино</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #111; color: #fff; line-height: 1.6; }
+        .container { width: 90%; max-width: 1100px; margin: auto; padding: 20px; }
+        header { background: #222; padding: 20px 0; text-align: center; }
+        header h1 { margin-bottom: 10px; }
+        nav a { margin: 0 15px; text-decoration: none; color: #ffcc00; font-weight: bold; }
+        .hero {
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)),
+                        url('https://images.unsplash.com/photo-1556742049-9088d099b3b8') no-repeat center center/cover;
+            padding: 100px 0; text-align: center;
+        }
+        .hero h2 { font-size: 36px; margin-bottom: 10px; }
+        .hero .btn {
+            display: inline-block; margin-top: 15px; padding: 10px 25px;
+            background: #ffcc00; color: #111; font-weight: bold;
+            text-decoration: none; border-radius: 5px;
+        }
+        .games { background: #1c1c1c; padding: 50px 0; text-align: center; }
+        .game-list {
+            display: flex; flex-wrap: wrap; justify-content: center;
+            gap: 30px; margin-top: 30px;
+        }
+        .game-card {
+            background: #222; padding: 20px; border-radius: 10px;
+            width: 250px; box-shadow: 0 0 10px #000;
+        }
+        .game-card button {
+            margin-top: 10px; padding: 10px; background: #ffcc00; color: #000;
+            border: none; border-radius: 5px; font-weight: bold; cursor: pointer;
+        }
+        .game-card p { margin-top: 10px; font-size: 14px; }
+        select { margin-top: 10px; padding: 5px; }
+        .about, .contact { background: #181818; padding: 40px 0; text-align: center; }
+        footer { background: #111; text-align: center; padding: 20px; font-size: 14px; color: #888; }
+
+        .auth {
+            background: #222; padding: 30px; text-align: center; margin: 30px auto;
+            max-width: 400px; border-radius: 10px;
+        }
+        .auth input {
+            margin: 10px; padding: 10px; width: 80%;
+            border: none; border-radius: 5px;
+        }
+        .auth button {
+            padding: 10px 20px; background: #ffcc00; color: #111;
+            border: none; border-radius: 5px; font-weight: bold;
+        }
+        #balance {
+            margin-top: 20px; font-size: 18px; color: #ffcc00;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Виртуальное Казино</h1>
+            <nav>
+                <a href="#games">Игры</a>
+                <a href="#about">О нас</a>
+                <a href="#contact">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <div class="auth">
+        <h2>Вход в казино</h2>
+        <input type="text" id="username" placeholder="Имя пользователя">
+        <button onclick="login()">Войти</button>
+        <div id="balance"></div>
+    </div>
+
+    <section id="games" class="games" style="display:none;">
+        <div class="container">
+            <h2>Наши игры</h2>
+            <div class="game-list">
+                <div class="game-card">
+                    <h3>Слоты</h3>
+                    <button onclick="playSlots()">Играть</button>
+                    <p id="slots-result"></p>
+                </div>
+                <div class="game-card">
+                    <h3>Рулетка</h3>
+                    <button onclick="playRoulette()">Крутить</button>
+                    <p id="roulette-result"></p>
+                </div>
+                <div class="game-card">
+                    <h3>Камень-Ножницы-Бумага</h3>
+                    <select id="rps-choice">
+                        <option value="камень">Камень</option>
+                        <option value="ножницы">Ножницы</option>
+                        <option value="бумага">Бумага</option>
+                    </select>
+                    <button onclick="playRPS()">Играть</button>
+                    <p id="rps-result"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="about">
+        <div class="container">
+            <h2>О нас</h2>
+            <p>Мы предлагаем лучшие игры казино с честной системой выигрыша и круглосуточной поддержкой.</p>
+        </div>
+    </section>
+
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Связаться с нами</h2>
+            <p>Email: support@casino.ru</p>
+            <p>Телефон: +7 (900) 000-00-00</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Виртуальное Казино. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <audio id="win-sound" src="https://cdn.pixabay.com/download/audio/2021/08/08/audio_a7e7db4451.mp3?filename=success-1-6297.mp3"></audio>
+    <audio id="lose-sound" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_8e6d78dc1e.mp3?filename=fail-144746.mp3"></audio>
+
+    <script>
+        let currentUser = "";
+        const startingBalance = 100;
+
+        function login() {
+            const user = document.getElementById("username").value.trim();
+            if (!user) return alert("Введите имя пользователя");
+            currentUser = user;
+            if (!localStorage.getItem("casino_" + user)) {
+                localStorage.setItem("casino_" + user, startingBalance);
+            }
+            updateBalance();
+            document.querySelector(".auth").style.display = "none";
+            document.getElementById("games").style.display = "block";
+        }
+
+        function updateBalance() {
+            const balance = localStorage.getItem("casino_" + currentUser);
+            document.getElementById("balance").innerText = `Баланс: ${balance} монет`;
+        }
+
+        function changeBalance(amount) {
+            let balance = parseInt(localStorage.getItem("casino_" + currentUser));
+            balance += amount;
+            localStorage.setItem("casino_" + currentUser, balance);
+            updateBalance();
+        }
+
+        function playSound(win) {
+            const winSound = document.getElementById("win-sound");
+            const loseSound = document.getElementById("lose-sound");
+            win ? winSound.play() : loseSound.play();
+        }
+
+        function playSlots() {
+            const symbols = ['🍒', '🍋', '🔔', '7️⃣'];
+            const slot1 = symbols[Math.floor(Math.random() * symbols.length)];
+            const slot2 = symbols[Math.floor(Math.random() * symbols.length)];
+            const slot3 = symbols[Math.floor(Math.random() * symbols.length)];
+            const result = `${slot1} | ${slot2} | ${slot3}`;
+            const win = (slot1 === slot2 && slot2 === slot3);
+            playSound(win);
+            changeBalance(win ? 10 : -5);
+            document.getElementById("slots-result").textContent = result + (win ? " — Вы выиграли 10 монет!" : " — Попробуйте снова (-5 монет)");
+        }
+
+        function playRoulette() {
+            const number = Math.floor(Math.random() * 37);
+            const color = number === 0 ? 'Зелёный' : (number % 2 === 0 ? 'Чёрный' : 'Красный');
+            const win = color === 'Красный';
+            playSound(win);
+            changeBalance(win ? 5 : -5);
+            document.getElementById("roulette-result").textContent = `Выпало: ${number} (${color}) — ${win ? "Выигрыш +5 монет" : "Проигрыш -5 монет"}`;
+        }
+
+        function playRPS() {
+            const userChoice = document.getElementById("rps-choice").value;
+            const choices = ['камень', 'ножницы', 'бумага'];
+            const aiChoice = choices[Math.floor(Math.random() * choices.length)];
+            let result = '';
+            let win = false;
+
+            if (userChoice === aiChoice) {
+                result = 'Ничья!';
+            } else if (
+                (userChoice === 'камень' && aiChoice === 'ножницы') ||
+                (userChoice === 'ножницы' && aiChoice === 'бумага') ||
+                (userChoice === 'бумага' && aiChoice === 'камень')
+            ) {
+                result = 'Вы выиграли!';
+                win = true;
+            } else {
+                result = 'Вы проиграли!';
+            }
+
+            playSound(win);
+            changeBalance(win ? 7 : -5);
+            document.getElementById("rps-result").textContent = `Вы: ${userChoice}, Компьютер: ${aiChoice} — ${result} (${win ? "+7 монет" : "-5 монет"})`;
+        }
+    </script>
+</body>
+</html>
