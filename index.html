@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Продать авто — Онлайн заявка</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Онлайн-заявка на продажу автомобиля</h1>
+      <p>Заполните форму, и мы свяжемся с вами в течение 15 минут</p>
+    </header>
+
+    <form class="car-form">
+      <h2>Данные автомобиля</h2>
+      <label>Марка и модель
+        <input type="text" name="model" placeholder="Например, Toyota Camry" required>
+      </label>
+      <label>Год выпуска
+        <input type="number" name="year" placeholder="Например, 2020" required>
+      </label>
+      <label>Пробег (км)
+        <input type="number" name="mileage" placeholder="Например, 45000" required>
+      </label>
+      <label>Состояние
+        <select name="condition" required>
+          <option value="">Выберите</option>
+          <option value="excellent">Отличное</option>
+          <option value="good">Хорошее</option>
+          <option value="average">Среднее</option>
+        </select>
+      </label>
+
+      <h2>Контактная информация</h2>
+      <label>Ваше имя
+        <input type="text" name="name" placeholder="Иван" required>
+      </label>
+      <label>Телефон
+        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
+      </label>
+      <label>Email
+        <input type="email" name="email" placeholder="you@example.com">
+      </label>
+
+      <button type="submit">Отправить заявку</button>
+    </form>
+
+    <footer>
+      <p>&copy; 2025 AutoSale. Все права защищены.</p>
+    </footer>
+  </div>
+</body>
+</html>
