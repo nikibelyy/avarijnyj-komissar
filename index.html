@@ -1,55 +1,110 @@
-<!DOCTYPE html>
-<html lang="ru">
+<!doctype html>
+<html lang="ru" class="ios-appearance">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Продать авто — Онлайн заявка</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0a" />
+  <title>Репорт пьяного водителя</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <meta name="description" content="Сфотографируйте опасного водителя и отправьте отчет — фото и описание уходят в Telegram." />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="format-detection" content="telephone=no" />
 </head>
 <body>
-  <div class="container">
-    <header>
-      <h1>Онлайн-заявка на продажу автомобиля</h1>
-      <p>Заполните форму, и мы свяжемся с вами в течение 15 минут</p>
+  <div class="safe-area">
+    <header class="nav-blur">
+      <div class="title-wrap">
+        <div class="title">Репорт</div>
+        <div class="subtitle">Пьяный водитель</div>
+      </div>
+      <button id="installBtn" class="ghost-btn" aria-label="Установить приложение">Установить</button>
     </header>
 
-    <form class="car-form">
-      <h2>Данные автомобиля</h2>
-      <label>Марка и модель
-        <input type="text" name="model" placeholder="Например, Toyota Camry" required>
-      </label>
-      <label>Год выпуска
-        <input type="number" name="year" placeholder="Например, 2020" required>
-      </label>
-      <label>Пробег (км)
-        <input type="number" name="mileage" placeholder="Например, 45000" required>
-      </label>
-      <label>Состояние
-        <select name="condition" required>
-          <option value="">Выберите</option>
-          <option value="excellent">Отличное</option>
-          <option value="good">Хорошее</option>
-          <option value="average">Среднее</option>
-        </select>
-      </label>
+    <main>
+      <section class="card">
+        <p class="disclaimer">
+          ⚠️ Пожалуйста, действуйте безопасно и соблюдайте местные законы. Не вступайте в конфликт и не управляйте автомобилем во время съёмки.
+        </p>
 
-      <h2>Контактная информация</h2>
-      <label>Ваше имя
-        <input type="text" name="name" placeholder="Иван" required>
-      </label>
-      <label>Телефон
-        <input type="tel" name="phone" placeholder="+7 (___) ___-__-__" required>
-      </label>
-      <label>Email
-        <input type="email" name="email" placeholder="you@example.com">
-      </label>
+        <form id="reportForm">
+          <div class="field">
+            <label for="photo">Фото</label>
+            <input id="photo" name="photo" type="file" accept="image/*" capture="environment" required>
+            <small>Откройте камеру, сделайте 1–3 снимка. Минимум 1 фото обязателно.</small>
+          </div>
 
-      <button type="submit">Отправить заявку</button>
-    </form>
+          <div class="field">
+            <label for="plate">Госномер (если видно)</label>
+            <input id="plate" name="plate" type="text" inputmode="latin" placeholder="A123BC77">
+          </div>
 
-    <footer>
-      <p>&copy; 2025 AutoSale. Все права защищены.</p>
+          <div class="field inline">
+            <div class="half">
+              <label for="vehicle">Авто/цвет (опц.)</label>
+              <input id="vehicle" name="vehicle" type="text" placeholder="Напр. BMW X5, чёрный">
+            </div>
+            <div class="half">
+              <label for="city">Город (опц.)</label>
+              <input id="city" name="city" type="text" placeholder="Ваш город">
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="desc">Описание ситуации</label>
+            <textarea id="desc" name="desc" rows="3" placeholder="Что произошло: местоположение, время, поведение водителя…"></textarea>
+          </div>
+
+          <div class="toggles">
+            <label class="switch">
+              <input type="checkbox" id="useGPS" checked>
+              <span class="slider"></span>
+            </label>
+            <span>Приложить геолокацию</span>
+          </div>
+
+          <button class="cta" type="submit" id="sendBtn">Отправить отчёт</button>
+          <div id="status" class="status" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <section class="card card-secondary">
+        <h2>Вознаграждение</h2>
+        <p>За подтверждённые отчёты предусмотрено вознаграждение. Мы свяжемся с вами при необходимости уточнений.</p>
+      </section>
+
+      <section class="card info-card">
+        <h2>Установка как приложение</h2>
+        <p>На iPhone можно установить сайт как приложение через браузер: откройте <strong>Поделиться</strong> → <strong>На экран «Домой»</strong>.</p>
+        <p>На Android появится кнопка «Установить» вверху.</p>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <button id="iosTip" class="ghost-btn small">Как установить на iPhone?</button>
+      <span class="footnote">v1.0 • PWA • «iOS 26 β5»-стиль</span>
     </footer>
   </div>
+
+  <dialog id="iosDialog">
+    <div class="sheet">
+      <div class="grabber"></div>
+      <h3>Добавление на iPhone</h3>
+      <ol>
+        <li>Нажмите <strong>Поделиться</strong> в Safari.</li>
+        <li>Выберите <strong>На экран «Домой»</strong>.</li>
+        <li>Подтвердите название и нажмите <strong>Добавить</strong>.</li>
+      </ol>
+      <button id="closeIosDialog" class="cta neutral">Понятно</button>
+    </div>
+  </dialog>
+
+  <script>
+    window.TELEGRAM_CHAT_ID = "7523840597";
+    window.TELEGRAM_BOT_TOKEN = "7875147914:AAGEAZ1Bxg82z54OeSO4Q_zGaeHWeG1xJ1o";
+  </script>
+  <script src="app.js"></script>
 </body>
 </html>
