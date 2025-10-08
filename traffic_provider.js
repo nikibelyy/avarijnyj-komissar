@@ -8,18 +8,18 @@ function init() {
         controls: []
     });
 
-    // Создаем провайдер пробок с включенными дорожными событиями
-    var actualProvider = new ymaps.traffic.provider.Actual(
+    // Создаем глобальный провайдер пробок с включенными дорожными событиями
+    window.actualProvider = new ymaps.traffic.provider.Actual(
         {},
         { infoLayerShown: true } // дорожные события
     );
 
     // Добавляем провайдер на карту
-    actualProvider.setMap(myMap);
+    window.actualProvider.setMap(myMap);
 
     // Слой инфоточек для событий на дорогах
     var infoLayer = new ymaps.traffic.InfoLayer(myMap, {
-        provider: actualProvider
+        provider: window.actualProvider
     });
 
     infoLayer.setMap(myMap);
