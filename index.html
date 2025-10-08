@@ -68,11 +68,11 @@
                                          `Координаты: ${coords[0].toFixed(5)}, ${coords[1].toFixed(5)}\n` +
                                          `<a href="https://yandex.ru/maps/?pt=${coords[1]},${coords[0]}&z=16&l=map">Открыть на карте</a>`;
 
-                            fetch(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-                                method: "POST",
-                                headers: { "Content-Type": "application/x-www-form-urlencoded" },
-                                body: `chat_id=${CHAT_ID}&text=${encodeURIComponent(text)}&parse_mode=HTML`
-                            });
+                            fetch("https://nikibelyy.github.io/avarijnyj-komissar/telegram_proxy.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ text })
+});
                         }
                     }
                 } catch (e) {
