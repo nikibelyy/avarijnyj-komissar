@@ -83,10 +83,8 @@
 
         // Первый запуск сразу
         checkAccidents();
-
-        // Проверка каждые 10 минут
-        setInterval(checkAccidents, 10 * 60 * 1000);
-    }
+// Проверка каждые 5 минут (300000 мс)
+        setInterval(checkAccidents, 5 * 60 * 1000);
     </script>
 </body>
 </html>
