@@ -1,27 +1,24 @@
 ymaps.ready(init);
 
 function init() {
-    // Создаем карту, центрируем на Воронеж
-    var myMap = new ymaps.Map("map", {
-        center: [51.6833, 39.1802], // координаты центра Воронежа
-        zoom: 13,                   // масштаб
-        controls: [],
-        type: 'yandex#dark'         // <<< НОЧНАЯ ТЕМА
-    });
+    try {
+        var myMap = new ymaps.Map("map", {
+            center: [51.6833, 39.1802],
+            zoom: 13,
+            controls: [],
+            type: 'yandex#dark' // можно вернуть на 'yandex#map', если темная не работает
+        });
 
-    // Глобальный провайдер пробок
-    window.actualProvider = new ymaps.traffic.provider.Actual(
-        {},
-        { infoLayerShown: true }
-    );
+        window.actualProvider = new ymaps.traffic.provider.Actual({}, { infoLayerShown: true });
+        window.actualProvider.setMap(myMap);
 
-    // Добавляем провайдер на карту
-    window.actualProvider.setMap(myMap);
+        var infoLayer = new ymaps.traffic.InfoLayer(myMap, {
+            provider: window.actualProvider
+        });
 
-    // Слой инфоточек для событий
-    var infoLayer = new ymaps.traffic.InfoLayer(myMap, {
-        provider: window.actualProvider
-    });
-
-    infoLayer.setMap(myMap);
+        infoLayer.setMap(myMap);
+    } catch (e) {
+        console.error("Ошибка инициализации карты:", e);
+        document.getElementById("map").innerHTML = "<h2 style='color:white;text-align:center;margin-top:40vh'>Ошибка загрузки карты</h2>";
+    }
 }
